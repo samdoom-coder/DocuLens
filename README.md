@@ -144,4 +144,4 @@ The backend uses the same OCR pipeline as OvisOCR2:
    marked.js for Markdown, and provides tabbed output with export.
 
 
-   We thank the authors for making their work publicly available.
+ Thanks the authors for making their work publicly available.
