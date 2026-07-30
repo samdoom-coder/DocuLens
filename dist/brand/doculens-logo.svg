@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="doculens-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="white"/>
+  <path d="M64 72 L128 40 L192 72 V120 L128 152 L64 120 V72 Z" fill="url(#doculens-gradient)" stroke="white" stroke-width="2"/>
+  <path d="M128 152 L192 120 V184 L128 216 L64 184 V120" fill="url(#doculens-gradient)" fill-opacity="0.3" stroke="url(#doculens-gradient)" stroke-width="2"/>
+  <circle cx="128" cy="128" r="12" fill="white"/>
+  <circle cx="128" cy="128" r="6" fill="url(#doculens-gradient)"/>
+</svg>

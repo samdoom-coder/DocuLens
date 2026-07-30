@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#059669" />
+    <meta name="description" content="Intelligent document parsing for images and PDFs. Stream structured Markdown with LaTeX, tables, and visual region crops." />
+    <link rel="icon" href="./favicon.ico" />
+    <title>DocuLens — Intelligent Document Parsing</title>
+    <script>
+      window.MathJax = {
+        options: {
+          skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'code', 'annotation', 'annotation-xml']
+        },
+        tex: {
+          inlineMath: [['\\(', '\\)'], ['$', '$']],
+          displayMath: [['\\[', '\\]']],
+          processEscapes: true
+        },
+        chtml: { matchFontHeight: false },
+        startup: { typeset: false }
+      };
+    </script>
+    <script defer src="./vendor/mathjax/tex-chtml-full.js"></script>
+    <link rel="stylesheet" href="./assets/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="header">
+        <div class="header-inner">
+          <div class="logo">
+            <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 6L10 4V8L6 9.5V14L2 15.5V6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 4L18 2L22 10L14 12L10 10.5V4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M14 12L22 10V18L14 20L10 18.5L14 17V12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 18.5L18 20.5V22L10 20.5V18.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="14" cy="14" r="1.5" fill="currentColor"/>
+            </svg>
+            <span class="logo-text">DocuLens</span>
+          </div>
+          <nav class="nav">
+            <a href="#" class="nav-link active">Home</a>
+            <a href="#" class="nav-link">Examples</a>
+            <a href="#" class="nav-link">Docs</a>
+          </nav>
+        </div>
+      </header>
+
+      <main class="main">
+        <section class="hero">
+          <h1 class="hero-title">Intelligent Document Parsing</h1>
+          <p class="hero-subtitle">
+            Upload an image or PDF and get structured Markdown with LaTeX formulas,
+            HTML tables, and rendered visual region crops — streamed in real time.
+          </p>
+        </section>
+
+        <section class="workspace">
+          <div class="upload-panel">
+            <div class="upload-card" id="upload-card">
+              <div class="upload-zone" id="upload-zone">
+                <input type="file" id="file-input" class="file-input" accept="image/*,.pdf" hidden />
+                <label for="file-input" class="upload-label">
+                  <svg class="upload-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 15V5C21 3.89 20.1 3 19 3H5C3.89 3 3 3.89 3 5V19C3 20.1 3.89 21 5 21H14.5C14.78 21 15 20.78 15 20.5V15C15 13.9 15.9 13 17 13H20.5C20.78 13 21 12.78 21 12.5V11.5C21 11.22 20.78 11 20.5 11H12.5C11.39 11 10.5 10.11 10.5 9V5.5C10.5 4.39 11.39 3.5 12.5 3.5H19C20.1 3.5 21 4.39 21 5.5V11C21 11.11 20.95 11.22 20.86 11.31C20.92 11.5 21 11.74 21 12V15Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 12L9 9L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 9L12 12L15 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span class="upload-text">Drop your document here or click to browse</span>
+                  <span class="upload-hint">PNG, JPEG, WebP, or PDF (max 50 pages)</span>
+                </label>
+              </div>
+
+              <div class="examples-section">
+                <h3 class="examples-title">Try an example</h3>
+                <div class="examples-grid" id="examples-grid">
+                  <button class="example-chip" data-file="table-1305dae7.webp" data-label="Table · Financial Summary">
+                    <span class="example-thumb" style="background:linear-gradient(135deg,#059669,#0d9488)">
+                      <span class="example-tag">Table</span>
+                    </span>
+                    <span class="example-label">Financial Summary</span>
+                  </button>
+                  <button class="example-chip" data-file="table-3ba1139c.webp" data-label="Table · Annual Report">
+                    <span class="example-thumb" style="background:linear-gradient(135deg,#089173,#059669)">
+                      <span class="example-tag">Table</span>
+                    </span>
+                    <span class="example-label">Annual Report</span>
+                  </button>
+                  <button class="example-chip" data-file="handwriting-040745.jpg" data-label="Handwriting · Chinese">
+                    <span class="example-thumb" style="background:linear-gradient(135deg,#0d9488,#089173)">
+                      <span class="example-tag">Handwriting</span>
+                    </span>
+                    <span class="example-label">Chinese</span>
+                  </button>
+                  <button class="example-chip" data-file="handwriting-042609.jpg" data-label="Handwriting · Chinese">
+                    <span class="example-thumb" style="background:linear-gradient(135deg,#059669,#0d9488)">
+                      <span class="example-tag">Handwriting</span>
+                    </span>
+                    <span class="example-label">Chinese</span>
+                  </button>
+                  <button class="example-chip" data-file="page-9477c155-19b3-4f2d-ac18-ee3f8997d2f8.png" data-label="Formula · Research Paper">
+                    <span class="example-thumb" style="background:linear-gradient(135deg,#0d9488,#059669)">
+                      <span class="example-tag">Formula</span>
+                    </span>
+                    <span class="example-label">Research Paper</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="results-panel" id="results-panel">
+            <div class="results-placeholder">
+              <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 12H15M9 16H15M9 8H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M20 7L12 4L4 7V17L12 20L20 17V7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <p class="placeholder-text">Upload a document to see parsed results</p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-inner">
+          <span class="footer-text">Powered by <a href="https://huggingface.co/ATH-MaaS/OvisOCR2" target="_blank" class="footer-link">ATH-MaaS/OvisOCR2</a></span>
+          <span class="footer-divider">·</span>
+          <span class="footer-text">Built with DocuLens</span>
+        </div>
+      </footer>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="./assets/app.js"></script>
+  </body>
+</html>
