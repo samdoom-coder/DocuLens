@@ -24,14 +24,7 @@ A modern image and PDF document parsing demo for
 [ATH-MaaS/OvisOCR2](https://huggingface.co/ATH-MaaS/OvisOCR2). It preserves
 reading order and emits Markdown with LaTeX formulas, HTML tables, and rendered
 visual-region crops. Model tokens stream into the interface as they are generated.
-PDFs are rasterized locally and processed one page at a time in Base mode. Up to
-four pages share one streamed GPU request by default, while each page is still
-inferred independently and sequentially. The browser merges the results, so long
-documents do not have to fit inside one ZeroGPU lease. GPU duration is estimated
-from the number of pages that actually remain in each group, so a short second
-group does not reserve the same ZeroGPU quota as a four-page group. If a stream
-closes without an explicit backend error, the browser reconnects from the
-first unfinished page while retaining every completed page.
+PDFs are rasterized locally and processed one page at a time in Base mode.
 
 ## Key features
 
@@ -149,3 +142,6 @@ The backend uses the same OCR pipeline as OvisOCR2:
    data-URI crops; truncated repeats are cleaned.
 5. **Frontend** — A vanilla JS client renders results with MathJax for LaTeX,
    marked.js for Markdown, and provides tabbed output with export.
+
+
+   We thank the authors for making their work publicly available.
