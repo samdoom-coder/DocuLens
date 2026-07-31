@@ -2,6 +2,21 @@
   'use strict';
 
   // ===== Configuration =====
+  if (typeof marked !== 'undefined' && marked.setOptions) {
+    marked.setOptions({
+      gfm: true,
+      breaks: true,
+      headerIds: false,
+    });
+  }
+
+  function renderMarkdown(markdown) {
+    if (typeof marked !== 'undefined' && marked.parse) {
+      return marked.parse(markdown);
+    }
+    return markdown;
+  }
+
   const API_BASE = window.location.origin;
   const EXAMPLES = [
     { file: 'table-1305dae7.webp', label: 'Table · Financial Summary' },
@@ -417,8 +432,8 @@
         ${allComplete ? '<span class="badge">Complete</span>' : '<span class="badge" style="background:#fef3c7;color:#92400e;border-color:#fde68a;">Processing</span>'}
       </div>
       <div class="result-actions">
-        <button class="action-btn" id="toggle-raw">Raw Markdown</button>
-        <button class="action-btn primary" id="export-md">Export as .md</button>
+        <button class="action-btn" id="export-md">Export as .md</button>
+        <button class="action-btn primary" id="export-html">Export as HTML</button>
       </div>
     `;
     resultsPanel.appendChild(header);
@@ -469,28 +484,26 @@
   }
 
   function renderCombinedMarkdown() {
-    const allComplete = completedPages.every(p => p.status === 'complete');
-    let html = '';
+    let html = '<div class="rendered-markdown">';
 
     completedPages.forEach((page, i) => {
       if (i > 0) {
-        html += '<hr/>';
+        html += '<hr />';
         html += `<p style="color:var(--color-slate-500);font-size:0.8rem;"><!-- Page ${page.page_number} --></p>`;
       }
-      if (page.status === 'complete') {
-        html += page.render_markdown || page.markdown || '';
-      } else {
-        html += page.render_markdown || '';
+      const content = page.render_markdown || page.markdown || '';
+      if (content) {
+        html += renderMarkdown(content);
       }
     });
 
-    if (html) {
-      setTimeout(() => {
-        if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
-          MathJax.typesetPromise([`#result-body`]).catch(err => console.warn(err));
-        }
-      }, 50);
-    }
+    html += '</div>';
+
+    setTimeout(() => {
+      if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+        MathJax.typesetPromise(['.rendered-markdown']).catch(err => console.warn(err));
+      }
+    }, 50);
 
     return html;
   }
@@ -536,10 +549,70 @@
         document.getElementById(`tab-${tabId}`).classList.add('active');
 
         if (tabId === 'rendered' && typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
-          MathJax.typesetPromise([`#tab-rendered`]).catch(err => console.warn(err));
+          MathJax.typesetPromise(['.rendered-markdown']).catch(err => console.warn(err));
         }
       });
     });
+  }
+
+  function getCssText() {
+    let css = '';
+    const link = document.querySelector('link[href*="style.css"]');
+    if (link && link.sheet && link.sheet.cssRules) {
+      css = Array.from(link.sheet.cssRules).map(r => r.cssText).join('\n');
+    }
+    return css;
+  }
+
+  function exportAsHtml() {
+    const renderedEl = document.querySelector('.rendered-markdown');
+    if (!renderedEl) {
+      showToast('No rendered content to export', 'error');
+      return;
+    }
+
+    const cssText = getCssText();
+    const htmlBody = renderedEl.innerHTML;
+
+    const mathJaxConfig = JSON.stringify({
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'code', 'annotation', 'annotation-xml'] },
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true,
+      },
+      chtml: { matchFontHeight: false },
+      startup: { typeset: true },
+    });
+
+    const fullHtml = []
+      .concat([
+        '<!DOCTYPE html>',
+        '<html lang="en">',
+        '<head>',
+        '<meta charset="UTF-8" />',
+        '<meta name="viewport" content="width=device-width, initial-scale=1.0" />',
+        '<title>DocuLens Export</title>',
+        '<style>',
+        cssText,
+        '</style>',
+        '<script>window.MathJax = ' + mathJaxConfig + ';</script>',
+        '<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>',
+        '</head>',
+        '<body>',
+        htmlBody,
+        '</body>',
+        '</html>',
+      ])
+      .join('\n');
+
+    const blob = new Blob([fullHtml], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'doculens-output.html';
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   function setupActionButtons() {
@@ -557,18 +630,9 @@
       });
     }
 
-    const toggleRawBtn = document.getElementById('toggle-raw');
-    if (toggleRawBtn) {
-      toggleRawBtn.addEventListener('click', () => {
-        const md = getCombinedRawMarkdown();
-        const blob = new Blob([md], { type: 'text/markdown' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'doculens-output.md';
-        a.click();
-        URL.revokeObjectURL(url);
-      });
+    const exportHtmlBtn = document.getElementById('export-html');
+    if (exportHtmlBtn) {
+      exportHtmlBtn.addEventListener('click', exportAsHtml);
     }
   }
 

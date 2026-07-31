@@ -36,7 +36,7 @@ PDFs are rasterized locally and processed one page at a time in Base mode.
   data-URI crops in the rendered output.
 - **Example gallery** — Five packaged examples covering financial tables,
   Chinese handwriting, and formula-rich research papers.
-- **Export** — Download parsed results as Markdown files.
+- **Export** — Download parsed results as Markdown (.md) or styled HTML (.html) files.
 - **Demo mode** — Run without loading the model for UI testing.
 
 ## Local run
@@ -125,7 +125,9 @@ DocuLens/
     │   ├── style.css   # DocuLens theme (emerald/teal)
     │   └── app.js      # Frontend logic (vanilla JS)
     ├── examples/       # Example documents
-    └── vendor/         # MathJax for LaTeX rendering
+    └── vendor/         # Third-party libraries
+        ├── mathjax/    # MathJax for LaTeX rendering
+        └── marked/     # marked.js for Markdown rendering
 ```
 
 ## Architecture
