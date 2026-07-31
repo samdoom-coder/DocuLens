@@ -738,5 +738,4 @@ if __name__ == "__main__":
         server_port=SERVER_PORT,
         root_path=ROOT_PATH,
         show_error=True,
-        share=True,
     )
